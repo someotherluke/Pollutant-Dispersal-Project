@@ -34,7 +34,7 @@ WEEK = 7 * DAY
 
 NUM_TIME_STEPS = 5 * HOUR           #The number of steps we model for
 
-X_DOMAIN = 200                      #Set up domain for x
+X_DOMAIN = 400                      #Set up domain for x
 Y_DOMAIN = 30                       #Set up domain for y
 Z_DOMAIN = 30                       #Set up domain for z
 
@@ -65,14 +65,18 @@ for n in range(1,NUM_TIME_STEPS):
             #print("C[",n,",",i,",",j,"]=",C[n,i,j]) #reads our array element by element 
             
                 #Set boundary "condition" for source of pollution
-                C[n,0,Mid_point_y] = EMISSION_RATE
+                C[n,1,Mid_point_y] = EMISSION_RATE
                 # C[n,0,Mid_point_y] = EMISSION_CHANGE
                 
                 #Just diffusion in y
                 #C[n+1,i,j] = C[n,i,j] + TIME_STEP * DIFFUSIVITY_COEFFICIENT_Y * ((C[n-1,i,j+1]-2*C[n-1,i,j]+C[n-1,i,j-1])/(Y_DOMAIN**2))
                 
+                Projection_term = ((DIFFUSIVITY_COEFFICIENT_Y * ((C[n-1,i,j+1]-2*C[n-1,i,j]+C[n-1,i,j-1])/(Y_DOMAIN**2))) - WIND_SPEED*((C[n,i+1,j]-C[n,i-1,j])/(X_DOMAIN*2)))
+                
+                Projection_term = Projection_term * (Projection_term > 0)
+                                
                 #Input our equation for advection/diffusion
-                C[n+1,i,j] = (C[n,i,j] + 2 * TIME_STEP * ((DIFFUSIVITY_COEFFICIENT_Y * ((C[n-1,i,j+1]-2*C[n-1,i,j]+C[n-1,i,j-1])/(Y_DOMAIN**2))) - WIND_SPEED*((C[n,i+1,j]-C[n,i-1,j])/(X_DOMAIN*2))))
+                C[n+1,i,j] = (C[n,i,j] + 2 * TIME_STEP * Projection_term)
 
 """# Our Equation for working out diffusion/advection for x,z
 for n in range(1,NUM_TIME_STEPS):
