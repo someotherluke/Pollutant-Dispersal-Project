@@ -1,2 +1,2 @@
 # Pollutant-Dispersal-Project
- A simple model of advection and diffusion of a single airborne pollutant
+ A simple model of advection and diffusion of a single airborne pollutant. This was my first proper coding project, and if you look through it you can see some examples of code written by a mathematician and not a computer scientist. 
